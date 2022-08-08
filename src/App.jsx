@@ -1,14 +1,21 @@
 import { Header } from "./components/Header";
 import { Post } from "./Post";
+import styles from "./App.module.css";
 
 import "./global.css";
+import { Sidebar } from "./components/Sidebar";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Header />
-      <Post author="Artur Ribeiro" content="Post Numero 1" />
-      <hr />
+
+      <div className={styles.wrapper}>
+        <Sidebar />
+        <main>
+          <Post author="Artur Ribeiro" content="Post Numero 1" />
+        </main>
+      </div>
     </div>
   );
 }
