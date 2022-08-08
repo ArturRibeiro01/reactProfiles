@@ -1,0 +1,10 @@
+import React from "react";
+
+export const Post = ({ author, content }) => {
+  return (
+    <div>
+      <h3>{author}</h3>
+      <p>{content}</p>
+    </div>
+  );
+};
