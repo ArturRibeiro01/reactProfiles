@@ -1,7 +1,12 @@
+import { Post } from "./Post";
+
 function App() {
   return (
     <div className="App">
-      <h3>O Palmeiras não tem mundial !!!!</h3>
+      <Post />
+      <Post />
+      <Post />
+      <Post />
     </div>
   );
 }
