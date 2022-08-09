@@ -36,6 +36,15 @@ export const Post = () => {
           <a>#rocketseat</a>
         </p>
       </div>
+
+      <form className={styles.commentForm}>
+        <strong>Deixe seu comentário</strong>
+        <textarea placeholder="Comente Aqui" />
+
+        <div className={styles.footer}>
+          <button type="submit">Enviar comentário</button>
+        </div>
+      </form>
     </article>
   );
 };
