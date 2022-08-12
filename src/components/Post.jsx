@@ -1,4 +1,5 @@
 import React from "react";
+import Comment from "./Comment";
 
 import styles from "./Post.module.css";
 
@@ -45,6 +46,11 @@ export const Post = () => {
           <button type="submit">Enviar comentário</button>
         </div>
       </form>
+      <div className={styles.commentList}>
+        <Comment />
+        <Comment />
+        <Comment />
+      </div>
     </article>
   );
 };
