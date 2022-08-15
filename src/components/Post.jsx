@@ -1,56 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
+import { format, formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
+
 import { Avatar } from "./Avatar";
 import Comment from "./Comment";
 
 import styles from "./Post.module.css";
 
-export const Post = () => {
+export const Post = ({ author, publishedAt, content }) => {
+  const [comments, setComments] = useState(["Comentário Exemplo"]);
+  const [newCommentText, setNewCommentText] = useState("");
+
+  const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'ás' HH:mm", {
+    locale: ptBR,
+  });
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptBR,
+    addSuffix: true,
+  });
+
+  const handleCreateNewComment = (event) => {
+    event.preventDefault();
+    const newCommentText = event.target.comment.value;
+
+    setComments([...comments, newCommentText]);
+    setNewCommentText("");
+  };
+
+  const handleNewCommentChange = (event) => {
+    event.preventDefault();
+
+    setNewCommentText(event.target.value);
+  };
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar
-            hasBorder
-            src="https://avatars.githubusercontent.com/u/59667445?v=4"
-          />
+          <Avatar hasBorder src={author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>Artur Ribeiro</strong>
-            <span>Desenvolvedor Web</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
-        <time title="08 de Agosto de 2022" dateTime="2022-08-08 10:27:48">
-          Publicado há 1h
+        <time
+          title={publishedDateFormatted}
+          dateTime={publishedAt.toISOString()}
+        >
+          {publishedDateRelativeToNow}
         </time>
       </header>
 
       <div className={styles.content}>
-        <p>Lorem ipsum dolor sit.</p>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe et vel
-          eaque ipsam iure ad?
-        </p>
-        <p>
-          👉 <a>jane.design/doctorcare </a>
-        </p>
-        <p>
-          <a>#novoprojeto</a>
-          <a>#nlw</a>
-          <a>#rocketseat</a>
-        </p>
+        {content.map((line) => {
+          if (line.type === "paragraph") {
+            return <p key={line.content}>{line.content}</p>;
+          } else if (line.type === "link") {
+            return (
+              <p key={line.content}>
+                <a href="">{line.content}</a>
+              </p>
+            );
+          }
+        })}
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu comentário</strong>
-        <textarea placeholder="Comente Aqui" />
+        <textarea
+          name="comment"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+          placeholder="Comente Aqui"
+        />
 
         <div className={styles.footer}>
           <button type="submit">Enviar comentário</button>
         </div>
       </form>
+
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map((comment) => {
+          return <Comment key={comment} content={comment} />;
+        })}
       </div>
     </article>
   );
