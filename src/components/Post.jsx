@@ -1,42 +1,52 @@
 import React from "react";
+import { format, formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
+
 import { Avatar } from "./Avatar";
 import Comment from "./Comment";
 
 import styles from "./Post.module.css";
 
-export const Post = () => {
+export const Post = ({ author, publishedAt, content }) => {
+  const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'ás' HH:mm", {
+    locale: ptBR,
+  });
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptBR,
+    addSuffix: true,
+  });
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar
-            hasBorder
-            src="https://avatars.githubusercontent.com/u/59667445?v=4"
-          />
+          <Avatar hasBorder src={author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>Artur Ribeiro</strong>
-            <span>Desenvolvedor Web</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
-        <time title="08 de Agosto de 2022" dateTime="2022-08-08 10:27:48">
-          Publicado há 1h
+        <time
+          title={publishedDateFormatted}
+          dateTime={publishedAt.toISOString()}
+        >
+          {publishedDateRelativeToNow}
         </time>
       </header>
 
       <div className={styles.content}>
-        <p>Lorem ipsum dolor sit.</p>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe et vel
-          eaque ipsam iure ad?
-        </p>
-        <p>
-          👉 <a>jane.design/doctorcare </a>
-        </p>
-        <p>
-          <a>#novoprojeto</a>
-          <a>#nlw</a>
-          <a>#rocketseat</a>
-        </p>
+        {content.map((line) => {
+          if (line.type === "paragraph") {
+            return <p>{line.content}</p>;
+          } else if (line.type === "link") {
+            return (
+              <p>
+                <a href="">{line.content}</a>
+              </p>
+            );
+          }
+        })}
       </div>
 
       <form className={styles.commentForm}>
@@ -48,8 +58,6 @@ export const Post = () => {
         </div>
       </form>
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
         <Comment />
       </div>
     </article>
