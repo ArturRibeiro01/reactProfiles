@@ -31,6 +31,7 @@ export const Post = ({ author, publishedAt, content }) => {
   const handleNewCommentChange = (event) => {
     event.preventDefault();
 
+    event.target.setCustomValidity("");
     setNewCommentText(event.target.value);
   };
 
@@ -41,6 +42,12 @@ export const Post = ({ author, publishedAt, content }) => {
     });
 
     setComments(commentsWithoutDeletedOne);
+  };
+
+  const handleNewCommentInvalid = (event) => {
+    console.log(
+      event.target.setCustomValidity("Faltou preencher seu comentário")
+    );
   };
 
   return (
@@ -82,10 +89,14 @@ export const Post = ({ author, publishedAt, content }) => {
           value={newCommentText}
           onChange={handleNewCommentChange}
           placeholder="Comente Aqui"
+          required
+          onInvalid={handleNewCommentInvalid}
         />
 
         <div className={styles.footer}>
-          <button type="submit">Enviar comentário</button>
+          <button type="submit" disabled={newCommentText.length === 0}>
+            Comentar
+          </button>
         </div>
       </form>
 
